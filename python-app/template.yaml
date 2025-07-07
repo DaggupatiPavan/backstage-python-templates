@@ -1,5 +1,6 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
+# some metadata about the template itself
 metadata:
   name: python-template
   title: Python flask template
@@ -8,6 +9,7 @@ spec:
   owner: development
   type: service
 
+  # these are the steps which are rendered in the frontend with the form input
   parameters:
     - title: Fill in some steps
       required:
@@ -19,14 +21,15 @@ spec:
           type: string
           description: Provide a component (microservice) name
           pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
-        environment:
-          title: Environment
-          type: string
-          description: The environment where this component will be deployed
-          enum:
-            - dev
-            - prod
+      environment:
+        title: Environment
+        type: string
+        description: The environment where this component will be deployed
+        enum:
+          - dev
+          - prod
 
+  # here's the steps that are executed in series in the scaffolder backend
   steps:
     - id: fetch-base
       name: Fetch Base
@@ -41,10 +44,9 @@ spec:
       name: Publish
       action: publish:github
       input:
-        allowedHosts:
-          - github.com
-        description: This is ${{ parameters.component_id }}
-        repoUrl: github.com?owner=ricardoandre-97&repo=${{parameters.component_id}}
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
+        repoUrl: github.com?owner=DaggupatiPavan-1&repo=${{parameters.component_id}}
         protectDefaultBranch: false
         repoVisibility: public
 
@@ -53,10 +55,8 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
-
+        catalogInfoPath: '/catalog-info.yaml' 
   output:
     links:
       - title: Repository
-        url: ${{ steps['publish'].output.remoteUrl }}
-
+        url: ${{ steps['publish'].output.remoteUrl }}        
