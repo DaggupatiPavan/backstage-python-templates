@@ -21,13 +21,13 @@ spec:
           type: string
           description: Provide a component (microservice) name
           pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
-      environment:
-        title: Environment
-        type: string
-        description: The environment where this component will be deployed
-        enum:
-          - dev
-          - prod
+        environment:
+          title: Environment
+          type: string
+          description: The environment where this component will be deployed
+          enum:
+            - dev
+            - prod
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
