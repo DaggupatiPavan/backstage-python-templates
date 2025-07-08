@@ -33,6 +33,8 @@ jobs:
 
   cd:
     needs: ci
+    permissions:
+      contents: write
     runs-on: self-hosted
     steps:
 
