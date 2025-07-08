@@ -5,7 +5,8 @@ metadata:
   description: Python app that displays time - named ${{values.app_name}}
   annotations:
     github.com/project-slug: DaggupatiPavan-1/${{values.app_name}}
-    backstage.io/kubernetes-namespace: ${{values.env}}
+    backstage.io/kubernetes-namespace: ${{values.app_env}}
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name:${{values.app_name}}"
     backstage.io/techdocs-ref: dir:.
 spec:
   type: service
