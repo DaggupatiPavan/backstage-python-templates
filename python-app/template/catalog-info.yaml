@@ -4,6 +4,7 @@ metadata:
   name: ${{values.app_name}}
   description: Python app that displays time - named ${{values.app_name}}
   annotations:
+    argocd/app-name: ${{values.app_name}}
     github.com/project-slug: DaggupatiPavan-1/${{values.app_name}}
     backstage.io/kubernetes-namespace: ${{values.app_env}}
     backstage.io/kubernetes-label-selector: "app.kubernetes.io/name:${{values.app_name}}"
