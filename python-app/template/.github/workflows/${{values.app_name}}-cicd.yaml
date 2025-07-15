@@ -35,7 +35,7 @@ jobs:
     needs: ci
     permissions:
       contents: write
-    runs-on: self-hosted
+    runs-on: self-hosted-runner
     steps:
 
       - uses: actions/checkout@v3
