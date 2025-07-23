@@ -1,0 +1,147 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ec2-instance-template
+  title: AWS EC2 Instance Template
+  description: Create a new AWS EC2 instance with Terraform infrastructure as code
+  tags:
+    - recommended
+    - aws
+    - ec2
+    - terraform
+    - infrastructure
+spec:
+  owner: platform-team
+  type: infrastructure
+  
+  parameters:
+    - title: Instance Configuration
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Instance Name
+          type: string
+          description: Name of the EC2 instance
+          pattern: '^[a-zA-Z0-9-]+$'
+        description:
+          title: Description
+          type: string
+          description: Brief description of the EC2 instance purpose
+        owner:
+          title: Owner
+          type: string
+          description: Owner of this instance
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: [Group, User]
+        
+    - title: AWS Configuration
+      required:
+        - instance_type
+        - region
+        - environment
+      properties:
+        instance_type:
+          title: Instance Type
+          type: string
+          description: AWS EC2 instance type
+          default: t3.micro
+          enum:
+            - t3.micro
+            - t3.small
+            - t3.medium
+            - t3.large
+            - m5.large
+            - m5.xlarge
+          enumNames:
+            - 't3.micro (1 vCPU, 1 GiB RAM)'
+            - 't3.small (2 vCPU, 2 GiB RAM)'
+            - 't3.medium (2 vCPU, 4 GiB RAM)'
+            - 't3.large (2 vCPU, 8 GiB RAM)'
+            - 'm5.large (2 vCPU, 8 GiB RAM)'
+            - 'm5.xlarge (4 vCPU, 16 GiB RAM)'
+        region:
+          title: AWS Region
+          type: string
+          description: AWS region for the instance
+          default: us-east-1
+          enum:
+            - us-east-1
+            - us-west-2
+            - eu-west-1
+            - ap-southeast-1
+        environment:
+          title: Environment
+          type: string
+          description: Deployment environment
+          default: dev
+          enum:
+            - dev
+            - staging
+            - prod
+        key_name:
+          title: SSH Key Pair Name
+          type: string
+          description: Name of the AWS key pair for SSH access (optional)
+
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+              - gitlab.com
+              - bitbucket.org
+
+  steps:
+    - id: fetch
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        copyWithoutTemplating:
+          - .github/workflows/*
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          instance_type: ${{ parameters.instance_type }}
+          region: ${{ parameters.region }}
+          environment: ${{ parameters.environment }}
+          key_name: ${{ parameters.key_name }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+
+    - id: publish
+      name: Publish to Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: 'EC2 Instance: ${{ parameters.name }}'
+        repoUrl: ${{ parameters.repoUrl }}
+        defaultBranch: main
+        repoVariables:
+          INSTANCE_NAME: ${{ parameters.name }}
+          ENVIRONMENT: ${{ parameters.environment }}
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

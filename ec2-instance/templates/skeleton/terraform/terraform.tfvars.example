@@ -1,0 +1,16 @@
+# Copy this file to terraform.tfvars and update the values
+
+# AWS Configuration
+aws_region    = "${{ values.region }}"
+instance_type = "${{ values.instance_type }}"
+environment   = "${{ values.environment }}"
+
+{% if values.key_name %}
+# SSH Key Configuration
+key_name = "${{ values.key_name }}"
+{% endif %}
+
+# Security Configuration
+allowed_cidr_blocks = [
+  "0.0.0.0/0"  # Replace with your specific IP ranges
+]
