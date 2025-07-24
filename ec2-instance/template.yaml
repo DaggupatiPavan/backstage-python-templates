@@ -106,7 +106,7 @@ spec:
       name: Fetch Template
       action: fetch:template
       input:
-        url: ./skeleton
+        url: ./templates/skeleton
         copyWithoutTemplating:
           - .github/workflows/*
         values:
@@ -126,7 +126,8 @@ spec:
         allowedHosts: ['github.com']
         description: 'EC2 Instance: ${{ parameters.name }}'
         repoUrl: ${{ parameters.repoUrl }}
-        defaultBranch: main
+        protectDefaultBranch: false
+        repoVisibility: public        
         repoVariables:
           INSTANCE_NAME: ${{ parameters.name }}
           ENVIRONMENT: ${{ parameters.environment }}
