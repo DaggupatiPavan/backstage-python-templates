@@ -18,10 +18,7 @@ output "instance_public_dns" {
   value       = aws_instance.main.public_dns
 }
 
-output "security_group_id" {
-  description = "ID of the security group"
-  value       = aws_security_group.instance_sg.id
-}
+
 
 # output "elastic_ip" {
 #   description = "Elastic IP address"
