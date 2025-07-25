@@ -7,13 +7,6 @@ terraform {
       version = "~> 5.0"
     }
   }
-  
-  #backend "s3" {
-    # Configure your S3 backend here
-    # bucket = "your-terraform-state-bucket"
-    # key    = "ec2/${{ values.name }}/terraform.tfstate"
-    # region = "${{ values.region }}"
-  #}
 }
 
 provider "aws" {
