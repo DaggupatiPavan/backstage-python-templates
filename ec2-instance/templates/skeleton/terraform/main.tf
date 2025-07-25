@@ -47,7 +47,7 @@ resource "aws_instance" "main" {
   instance_type = var.instance_type
   {% if values.key_name %}key_name      = var.key_name{% endif %}
   
-  security_groups = ['sg-0d56e86ef61a7dc01']
+  security_groups = ["sg-0d56e86ef61a7dc01"]
   
   # Enable detailed monitoring
   monitoring = true
