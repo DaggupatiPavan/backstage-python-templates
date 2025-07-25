@@ -47,10 +47,8 @@ resource "aws_instance" "main" {
   instance_type = var.instance_type
   {% if values.key_name %}key_name      = var.key_name{% endif %}
   
-  security_groups = ["sg-0d56e86ef61a7dc01"]
-  
-  # Enable detailed monitoring
-  monitoring = true
+  vpc_security_group_ids = ["sg-0d56e86ef61a7dc01"]
+  subnet_id = "subnet-02cf2e19298b8cdac"
   
   # User data script for initial setup
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
@@ -78,12 +76,3 @@ resource "aws_instance" "main" {
   }
 }
 
-# Elastic IP (optional, uncomment if needed)
-# resource "aws_eip" "main" {
-#   instance = aws_instance.main.id
-#   domain   = "vpc"
-#   
-#   tags = {
-#     Name = "${{ values.name }}-eip"
-#   }
-# }
