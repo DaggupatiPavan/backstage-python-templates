@@ -18,13 +18,6 @@ output "instance_public_dns" {
   value       = aws_instance.main.public_dns
 }
 
-
-
-# output "elastic_ip" {
-#   description = "Elastic IP address"
-#   value       = aws_eip.main.public_ip
-# }
-
 output "ssh_connection_command" {
   description = "SSH connection command"
   {% if values.key_name %}
