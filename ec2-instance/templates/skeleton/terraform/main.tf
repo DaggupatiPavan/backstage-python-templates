@@ -39,47 +39,7 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# Security Group
-resource "aws_security_group" "instance_sg" {
-  name_prefix = "${{ values.name }}-"
-  description = "Security group for ${{ values.name }} EC2 instance"
-  
-  # SSH access
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Restrict this in production
-  }
-  
-  # HTTP access
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  # HTTPS access
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  # All outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  tags = {
-    Name = "${{ values.name }}-security-group"
-  }
-}
+
 
 # EC2 Instance
 resource "aws_instance" "main" {
@@ -87,7 +47,7 @@ resource "aws_instance" "main" {
   instance_type = var.instance_type
   {% if values.key_name %}key_name      = var.key_name{% endif %}
   
-  security_groups = [aws_security_group.instance_sg.name]
+  security_groups = ['sg-0d56e86ef61a7dc01']
   
   # Enable detailed monitoring
   monitoring = true
