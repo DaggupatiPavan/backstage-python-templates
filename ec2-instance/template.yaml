@@ -107,8 +107,6 @@ spec:
       action: fetch:template
       input:
         url: ./templates/skeleton
-        copyWithoutTemplating:
-          - .github/workflows/*
         values:
           name: ${{ parameters.name }}
           description: ${{ parameters.description }}
