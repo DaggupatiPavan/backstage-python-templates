@@ -59,7 +59,7 @@ resource "aws_instance" "main" {
   }))
   
   tags = {
-    Name        = "${{ values.name }}"
+    Name        = "marvel-RHDH-${{ values.name }}"
     Environment = var.environment
   }
   
@@ -73,7 +73,7 @@ resource "aws_instance" "main" {
     delete_on_termination = true
     
     tags = {
-      Name = "${{ values.name }}-root-volume"
+      Name = "marvel-RHDH-${{ values.name }}-root-volume"
     }
   }
 }
