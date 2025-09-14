@@ -43,8 +43,9 @@ jobs:
       - name: Modify values file
         shell: bash
         run: |
+          sudo apt install python3-pip -y
           echo ${{ '${{needs.ci.outputs.commit_id}}' }}
-          pip install yq
+          pip install yq --break-system-packages
           yq -Yi '.image.tag = "${{'${{needs.ci.outputs.commit_id}}' }}"' charts/${{values.app_name}}/values-${{values.app_env}}.yaml
 
       - name: Commit changes
@@ -91,3 +92,4 @@ jobs:
         shell: bash
         run: |
           argocd app sync ${{values.app_name}}
+
