@@ -56,14 +56,14 @@ jobs:
       - name: Install argocd
         shell: bash
         run: |
-          curl -ksSL -o argocd https://localhost:31801/download/argocd-linux-amd64
+          curl -ksSL -o argocd https://localhost:32645/download/argocd-linux-amd64
           chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
 
       - name: argocd login
         shell: bash
         run: |
-          argocd login localhost:31801 \
+          argocd login localhost:32645 \
             --insecure  \
             --grpc-web \
             --username admin \
@@ -92,4 +92,5 @@ jobs:
         shell: bash
         run: |
           argocd app sync ${{values.app_name}}
+
 
