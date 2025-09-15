@@ -7,12 +7,11 @@ metadata:
     github.com/project-slug: DaggupatiPavan-1/${{ values.app_name }}
     backstage.io/techdocs-ref: dir:.
     argocd/app-name: ${{ values.app_name }}
-    backstage.io/kubernetes-namespace: ${{ values.destination.repo }}
+    backstage.io/kubernetes-namespace: ${{ values.app_env }}
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=${{ values.app_name }}
 spec:
   type: service
   lifecycle: experimental
-  owner: ${{ values.owner }}
   system: encryption-system
   providesApis:
     - encryption-api
@@ -25,7 +24,6 @@ metadata:
 spec:
   type: openapi
   lifecycle: experimental
-  owner: ${{ values.owner }}
   system: encryption-system
   definition:
     $text: ./src/main/resources/static/api-docs.yaml
