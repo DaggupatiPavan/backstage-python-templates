@@ -16,7 +16,6 @@ spec:
   owner: development
   type: service
 
-  # these are the steps which are rendered in the frontend with the form input
   parameters:
     - title: Fill in some steps
       required:
@@ -36,7 +35,6 @@ spec:
             - dev
             - prod
 
-  # here's the steps that are executed in series in the scaffolder backend
   steps:
     - id: fetch-base
       name: Fetch Base
@@ -44,16 +42,15 @@ spec:
       input:
         url: ./template
         values:
-          app_name: ${{parameters.component_id}}
-          app_env: ${{parameters.environment}}
+          app_name: ${{ parameters.component_id }}
+          app_env: ${{ parameters.environment }}
 
     - id: publish
       name: Publish
       action: publish:github
       input:
-        # allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }}
-        repoUrl: github.com?owner=DaggupatiPavan-1&repo=${{parameters.component_id}}
+        description: This is ${{ parameters.component_id }}
+        repoUrl: "github.com?owner=DaggupatiPavan-1&repo=${{ parameters.component_id }}"
         protectDefaultBranch: false
         repoVisibility: public
 
@@ -62,8 +59,9 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml' 
+        catalogInfoPath: '/catalog-info.yaml'
+
   output:
     links:
       - title: Repository
-        url: ${{ steps['publish'].output.remoteUrl }}     
+        url: ${{ steps['publish'].output.remoteUrl }}
