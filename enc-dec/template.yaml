@@ -44,13 +44,16 @@ spec:
               - Group
     - title: Choose Location
       required:
-        - component_id
+        - repoUrl
       properties:
-        component_id:
-          title: Component name
+        repoUrl:
+          title: Repository Location
           type: string
-          description: Provide a component (microservice) name
-          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+              - gitlab.com
   steps:
     - id: template
       name: Fetch Skeleton + Template
@@ -62,24 +65,23 @@ spec:
         values:
           app_name: ${{ parameters.app_name }}
           description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
 
     - id: publish
       name: Publish
       action: publish:github
       input:
-        # allowedHosts: ["github.com"]
         description: This is ${{ parameters.app_name }}
-        repoUrl: github.com?owner=DaggupatiPavan-1&repo=${{parameters.component_id}}
-        protectDefaultBranch: false
-        repoVisibility: public
-        
+        repoUrl: ${{ parameters.repoUrl }}
+
     - id: register
       name: Register
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
 
   output:
     links:
