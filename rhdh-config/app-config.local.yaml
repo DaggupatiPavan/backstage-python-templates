@@ -1,0 +1,140 @@
+# Backstage override configuration for your local development environment
+includes:
+  - 'dynamic-plugins.default.yaml'
+app:
+  baseUrl: http://4.222.216.182:9100
+  title: NextGen Backstage App
+  listen:
+    host: 0.0.0.0
+
+backend:
+  baseUrl: http://4.222.216.182:9200
+  listen:
+    port: 9200
+    host: 0.0.0.0
+  cors:
+    origin: http://4.222.216.182:9100
+  database:
+    client: pg
+    connection:
+      host: 4.222.216.182
+      port: 32616
+      user: postgres
+      password: ODE2JcVC9u
+
+auth:
+  environment: development
+  session:
+    secret: mysecret
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+    oidc:
+      development:
+        metadataUrl: http://4.222.216.182:30974/auth/realms/master/.well-known/openid-configuration
+        issuer: http://4.222.216.182:30974/auth/realms/master
+        clientId: ${OIDC_KEYCLOAK_CLIENTID}
+        clientSecret: ${OIDC_KEYCLOAK_CLIENTSECRET}
+        prompt: auto
+        signIn:
+          resolvers:
+            - resolver: oidcSubClaimMatchingKeycloakUserId
+            - resolver: preferredUsernameMatchingUserEntityName
+            - resolver: emailMatchingUserEntityProfileEmail
+            - resolver: emailLocalPartMatchingUserEntityName
+signInPage: oidc
+
+catalog:
+  providers:
+    keycloakOrg:
+      default:
+        baseUrl: http://4.222.216.182:30974
+        username: ${KEYCLOAK_ADMIN_USER}
+        password: ${KEYCLOAK_ADMIN_PASSWD}
+        realm: master
+        loginRealm: master
+        schedule:
+            frequency: { minutes: 1 }
+            timeout: { minutes: 1 }
+            initialDelay: { seconds: 15 }
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, Group, Resource, Location, Template, API]
+  locations:
+
+    - type: file
+      target: /home/azureuser/rhdh/catalog-entities/components/users.yaml
+      rules:
+        - allow: [User]
+    # - type: url
+    #   target: https://github.com/DaggupatiPavan/backstage-software-templates/blob/main/templates.yaml
+
+    - type: file
+      target: /home/azureuser/labserver/catalog/entities/user.yaml
+      rules:
+        - allow: [User]
+
+    - type: url
+      target: https://github.com/DaggupatiPavan/backstage-python-templates/blob/main/python-app/template.yaml
+      rules:
+        - allow: [Template]
+
+    - type: url
+      target: https://github.com/DaggupatiPavan/backstage-python-templates/blob/main/ec2-instance/template.yaml
+      rules:
+        - allow: [Template]
+
+techdocs:
+  builder: local
+  publisher:
+    type: local
+  generator:
+    runIn: local
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+ci:
+  github:
+    repositories:
+      - owner: DaggupatiPavan-1
+        repo: '*'
+
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'localKubectlProxy'
+
+argocd:
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argoInstance1
+          url: https://172.25.0.4:32645 # The API endpoint for your Argo CD instance
+          token: ${ARGOCD_AUTH_TOKEN}
+
+
+
+permission:
+  enabled: false
+  # rbac:
+  #   admin:
+  #     users:
+  #       - name: user:default/pavan
+  #   pluginsWithPermission:
+  #     - catalog
+  #     - scaffolder
+  #     - permission
+
+extensionsy:
+  installation:
+    enabled: true
+    saveToSingleFile:
+      file: /home/azureuser/dynamic-plugins.default.yaml
