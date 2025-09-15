@@ -33,15 +33,15 @@ spec:
           type: string
           description: Help others understand what this service is for
           default: Java microservice for encryption and decryption operations
-        # owner:
-        #   title: Owner
-        #   type: string
-        #   description: Owner of the component
-        #   default: platform-team
-        #   ui:field: OwnerPicker
-        #   ui:options:
-        #     allowedKinds:
-        #       - Group
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: platform-team
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
     - title: Choose Location
       required:
         - component_id
@@ -70,7 +70,6 @@ spec:
       input:
         # allowedHosts: ["github.com"]
         description: This is ${{ parameters.app_name }}
-        repoUrl: ${{ parameters.repoUrl }}
         repoUrl: github.com?owner=DaggupatiPavan-1&repo=${{parameters.component_id}}
         protectDefaultBranch: false
         repoVisibility: public
