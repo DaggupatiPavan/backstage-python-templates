@@ -73,10 +73,12 @@ spec:
       name: Publish
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
+        # allowedHosts: ["github.com"]
         description: This is ${{ parameters.app_name }}
         repoUrl: ${{ parameters.repoUrl }}
-
+        protectDefaultBranch: false
+        repoVisibility: public
+        
     - id: register
       name: Register
       action: catalog:register
