@@ -13,3 +13,7 @@ nano ~/rhdh/packages/backend/src/index.ts
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 # add above line in index.ts file 
 ```
+After that run proxy in kubernetes server for that run below cmd
+```
+kubectl proxy --port=8001
+```
