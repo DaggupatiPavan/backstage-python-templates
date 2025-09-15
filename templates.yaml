@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: MDDP-collection
+  description: A collection of MDDP Software Templates for Red Hat Developer Hub
+spec:
+  type: url
+  targets:
+    - ./python-app/template.yaml
+    - ./ec2-instance/template.yaml
+    - ./enc-dec/template.yaml
