@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    root: WARN
+    com.redhat.encryption: INFO
+  file:
+    name: /logs/${{values.app_name}}.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

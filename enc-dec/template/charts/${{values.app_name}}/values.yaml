@@ -1,0 +1,52 @@
+replicaCount: 3
+
+image:
+  repository: ${{values.app_name}}
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: ${{values.http_port}}
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: ${{values.app_name}}.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ${{values.app_name}}-tls
+      hosts:
+        - ${{values.app_name}}.example.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+  springProfilesActive: prod

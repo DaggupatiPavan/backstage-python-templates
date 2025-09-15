@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  tag: "dev"
+
+ingress:
+  hosts:
+    - host: ${{values.app_name}}-dev.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ${{values.app_name}}-dev-tls
+      hosts:
+        - ${{values.app_name}}-dev.example.com
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 125m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+
+env:
+  springProfilesActive: dev
