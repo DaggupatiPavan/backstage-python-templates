@@ -50,7 +50,7 @@ spec:
         values:
           app_name: ${{ parameters.app_name }}
           description: ${{ parameters.description }}
-          app_env: ${{parameters.environment}}
+          app_env: ${{ parameters.environment }}
           http_port: 8080
 
     - id: publish
@@ -58,7 +58,7 @@ spec:
       action: publish:github
       input:
         description: This is ${{ parameters.app_name }}
-        # Explicit repoUrl like Python template (ensures repoContentsUrl works)
+        # Explicit repoUrl ensures correct repoContentsUrl
         repoUrl: github.com?owner=DaggupatiPavan-1&repo=${{ parameters.app_name }}
         protectDefaultBranch: false
         repoVisibility: public
