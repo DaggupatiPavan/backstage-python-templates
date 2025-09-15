@@ -21,41 +21,25 @@ spec:
       required:
         - app_name
         - description
-        - owner
+        - environment
       properties:
         app_name:
           title: Name of the Application
           type: string
           description: Unique name of the application
-          default: encryption-service
-          pattern: "^[a-z0-9-]+$"
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
         description:
           title: Description
           type: string
           description: Help others understand what this service is for
           default: Java microservice for encryption and decryption operations
-        owner:
-          title: Owner
+        environment:
+          title: Environment
           type: string
-          description: Owner of the component
-          default: platform-team
-          ui:field: OwnerPicker
-          ui:options:
-            allowedKinds:
-              - Group
-
-    - title: Choose Location
-      required:
-        - repoUrl
-      properties:
-        repoUrl:
-          title: Repository Location
-          type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
-              - gitlab.com
+          description: The environment where this component will be deployed
+          enum:
+            - dev
+            - prod
 
   steps:
     - id: template
@@ -63,13 +47,10 @@ spec:
       action: fetch:template
       input:
         url: ./template
-        copyWithoutTemplating:
-          - .github/workflows/*
         values:
           app_name: ${{ parameters.app_name }}
           description: ${{ parameters.description }}
-          owner: ${{ parameters.owner }}
-          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+          app_env: ${{parameters.environment}}
           http_port: 8080
 
     - id: publish
