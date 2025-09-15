@@ -33,15 +33,15 @@ spec:
           type: string
           description: Help others understand what this service is for
           default: Java microservice for encryption and decryption operations
-        owner:
-          title: Owner
-          type: string
-          description: Owner of the component
-          default: platform-team
-          ui:field: OwnerPicker
-          ui:options:
-            allowedKinds:
-              - Group
+        # owner:
+        #   title: Owner
+        #   type: string
+        #   description: Owner of the component
+        #   default: platform-team
+        #   ui:field: OwnerPicker
+        #   ui:options:
+        #     allowedKinds:
+        #       - Group
     - title: Choose Location
       required:
         - component_id
@@ -62,8 +62,6 @@ spec:
         values:
           app_name: ${{ parameters.app_name }}
           description: ${{ parameters.description }}
-          owner: ${{ parameters.owner }}
-          destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
 
     - id: publish
