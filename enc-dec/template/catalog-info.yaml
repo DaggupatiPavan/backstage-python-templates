@@ -1,15 +1,18 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: ${{values.app_name}}
-  description: ${{values.description}}
+  name: ${{ values.app_name }}
+  description: ${{ values.description }}
   annotations:
-    github.com/project-slug: ${{values.destination.owner + "/" + values.destination.repo}}
+    github.com/project-slug: DaggupatiPavan-1/${{ values.app_name }}
     backstage.io/techdocs-ref: dir:.
+    argocd/app-name: ${{ values.app_name }}
+    backstage.io/kubernetes-namespace: ${{ values.destination.repo }}
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=${{ values.app_name }}
 spec:
   type: service
   lifecycle: experimental
-  owner: ${{values.owner}}
+  owner: ${{ values.owner }}
   system: encryption-system
   providesApis:
     - encryption-api
@@ -18,11 +21,11 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: encryption-api
-  description: Encryption and Decryption REST API
+  description: REST API for encryption and decryption operations
 spec:
   type: openapi
   lifecycle: experimental
-  owner: ${{values.owner}}
+  owner: ${{ values.owner }}
   system: encryption-system
   definition:
     $text: ./src/main/resources/static/api-docs.yaml
