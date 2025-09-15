@@ -58,10 +58,11 @@ spec:
       action: publish:github
       input:
         description: This is ${{ parameters.app_name }}
-        # Explicit repoUrl ensures correct repoContentsUrl
-        repoUrl: github.com?owner=DaggupatiPavan-1&repo=${{ parameters.app_name }}
+        # Wrap the repoUrl in quotes to avoid YAML parse errors
+        repoUrl: "github.com?owner=DaggupatiPavan-1&repo=${{ parameters.app_name }}"
         protectDefaultBranch: false
         repoVisibility: public
+
 
     - id: register
       name: Register
