@@ -1,0 +1,299 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Enc-dec API",
+    "description": "enc-dec",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/methods": {
+      "get": {
+        "summary": "Get Available Methods",
+        "description": "Get list of available encryption/decryption methods",
+        "operationId": "get_available_methods_methods_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/encrypt": {
+      "post": {
+        "summary": "Encrypt Text",
+        "description": "Encrypt text using specified method",
+        "operationId": "encrypt_text_encrypt_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EncryptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncryptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/decrypt": {
+      "post": {
+        "summary": "Decrypt Text",
+        "description": "Decrypt text using specified method",
+        "operationId": "decrypt_text_decrypt_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecryptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecryptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DecryptionRequest": {
+        "properties": {
+          "encrypted_text": {
+            "type": "string",
+            "title": "Encrypted Text"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method",
+            "default": "base64"
+          },
+          "secret_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "encrypted_text"
+        ],
+        "title": "DecryptionRequest"
+      },
+      "DecryptionResponse": {
+        "properties": {
+          "encrypted_text": {
+            "type": "string",
+            "title": "Encrypted Text"
+          },
+          "decrypted_text": {
+            "type": "string",
+            "title": "Decrypted Text"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "encrypted_text",
+          "decrypted_text",
+          "method",
+          "success",
+          "message"
+        ],
+        "title": "DecryptionResponse"
+      },
+      "EncryptionRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method",
+            "default": "base64"
+          },
+          "secret_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "EncryptionRequest"
+      },
+      "EncryptionResponse": {
+        "properties": {
+          "original_text": {
+            "type": "string",
+            "title": "Original Text"
+          },
+          "encrypted_text": {
+            "type": "string",
+            "title": "Encrypted Text"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "original_text",
+          "encrypted_text",
+          "method",
+          "success",
+          "message"
+        ],
+        "title": "EncryptionResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
