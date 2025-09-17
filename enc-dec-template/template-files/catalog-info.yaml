@@ -12,7 +12,6 @@ metadata:
   tags:
     - python
     - fastapi
-    - docker
     - api
     - encryption
     - security
@@ -27,4 +26,18 @@ spec:
   type: service
   owner: ${{ values.owner }}
   lifecycle: production
+    - enc-dec-api  
 
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: enc-dec-api
+  description: API for enc-dec service
+spec:
+  type: openapi
+  lifecycle: production
+  owner: team-name
+  definition:
+    $text: ./openapi.json
