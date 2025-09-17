@@ -1,0 +1,44 @@
+replicaCount: 1
+image:
+  repository: pavan176/${{values.componentName}}
+  pullPolicy: IfNotPresent
+  tag: ${{values.componentName}}-${{values.app_env}}-latest
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+podLabels: {}
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ""
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: NodePort
+  port: ${{ values.dockerPort }}
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: ${{values.componentName}}-${{values.app_env}}.test.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+resources:
+  requests:
+    cpu: 50m
+    memory: 50M
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}

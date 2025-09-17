@@ -1,0 +1,176 @@
+# template.yaml for Encryption/Decryption API Template
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: enc-dec-api-template
+  title: Encryption/Decryption API Template
+  description: A simple low-code/no-code Python FastAPI application for encryption and decryption operations with Docker support and Swagger UI
+  tags:
+    - python
+    - fastapi
+    - docker
+    - api
+    - encryption
+    - security
+spec:
+  owner: platform-team
+  type: service
+
+  # Parameters that users can customize
+  parameters:
+    - title: Project Information
+      required:
+        - componentName
+        - owner
+        - description
+        - organization
+        - repoName
+        - environment
+      properties:
+        componentName:
+          title: Name
+          type: string
+          description: Unique name of the component
+          ui:autofocus: true
+          ui:field: EntityNamePicker
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+              - User
+        description:
+          title: Description
+          type: string
+          description: Description of the component
+          ui:options:
+            multiline: true
+        organization:
+          title: Organization
+          type: string
+          description: The organization or user that owns the repository
+          default: DaggupatiPavan-1
+        repoName:
+          title: Repository Name
+          type: string
+          description: Name of the repository to create 
+        environment:
+          title: Environment
+          type: string
+          description: The environment where this component will be deployed
+          enum:
+            - dev
+            - prod          
+
+    - title: API Configuration
+      properties:
+        apiPort:
+          title: API Port
+          type: number
+          default: 8000
+          description: Port number for the API service
+        dockerPort:
+          title: Docker Port
+          type: number
+          default: 8000
+          description: Port number for Docker container
+        imageName:
+          title: Docker Image Name
+          type: string
+          default: enc-dec-api
+          description: Name for the Docker image
+        containerName:
+          title: Container Name
+          type: string
+          default: enc-dec-api
+          description: Name for the Docker container
+
+    - title: Encryption Methods
+      properties:
+        enableBase64:
+          title: Enable Base64
+          type: boolean
+          default: true
+          description: Enable Base64 encoding/decoding
+        enableFernet:
+          title: Enable Fernet
+          type: boolean
+          default: true
+          description: Enable Fernet symmetric encryption
+        enableAES:
+          title: Enable AES
+          type: boolean
+          default: true
+          description: Enable AES-like encryption with custom key
+
+    - title: Additional Features
+      properties:
+        includeTests:
+          title: Include Tests
+          type: boolean
+          default: false
+          description: Include basic test files
+        includeCI:
+          title: Include CI/CD
+          type: boolean
+          default: false
+          description: Include basic CI/CD configuration
+        includeMonitoring:
+          title: Include Monitoring
+          type: boolean
+          default: false
+          description: Include basic monitoring configuration
+
+  # Steps to execute when creating the project
+  steps:
+    - id: fetch
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./template-files
+        values:
+          app_env: ${{parameters.environment}}
+          organization: ${{ parameters.organization }}
+          repoName: ${{ parameters.repoName }}
+          componentName: ${{ parameters.componentName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          apiPort: ${{ parameters.apiPort }}
+          dockerPort: ${{ parameters.dockerPort }}
+          imageName: ${{ parameters.imageName }}
+          containerName: ${{ parameters.containerName }}
+          enableBase64: ${{ parameters.enableBase64 }}
+          enableFernet: ${{ parameters.enableFernet }}
+          enableAES: ${{ parameters.enableAES }}
+          includeTests: ${{ parameters.includeTests }}
+          includeCI: ${{ parameters.includeCI }}
+          includeMonitoring: ${{ parameters.includeMonitoring }}
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+       # allowedHosts: ['github.com']
+        description: This is ${{ parameters.componentName }}
+        repoUrl: github.com?owner=${{ parameters.organization }}&repo=${{ parameters.repoName }}
+        protectDefaultBranch: false
+        repoVisibility: public
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # Output after template execution
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

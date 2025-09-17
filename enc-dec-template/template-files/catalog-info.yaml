@@ -1,0 +1,29 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.componentName }}
+  description: ${{ values.description }}
+  annotations:
+    github.com/project-slug: ${{ values.organization }}/${{ values.repoName }}
+    argocd/app-name: ${{values.componentName}}
+    backstage.io/kubernetes-namespace: ${{values.app_env}}
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - python
+    - fastapi
+    - docker
+    - api
+    - encryption
+    - security
+  links:
+    - url: http://localhost:${{ values.dockerPort }}/docs
+      title: Swagger UI
+      icon: docs
+    - url: http://localhost:${{ values.dockerPort }}
+      title: API Endpoint
+      icon: api
+spec:
+  type: service
+  owner: ${{ values.owner }}
+  lifecycle: production
+

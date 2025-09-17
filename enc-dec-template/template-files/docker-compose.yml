@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  {{ values.containerName }}:
+    build: .
+    ports:
+      - "${{ values.dockerPort }}:${{ values.apiPort }}"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    container_name: {{ values.containerName }}
+
+volumes:
+  {{ values.containerName }}-data:
